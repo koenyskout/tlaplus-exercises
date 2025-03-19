@@ -1,0 +1,6 @@
+*.dvi
+*.out
+*.tex
+*.pdf
+states
+.vscode
