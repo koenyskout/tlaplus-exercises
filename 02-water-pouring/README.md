@@ -1,6 +1,6 @@
 # Water pouring puzzle
 
-<img src="waterpouring.png" style="max-width: 200px"></img>
+<img src="waterpouring.png" width="150px"></img>
 
 You have 3 water jugs: one of 8 liters, one of 5 liters, and one of 3 liters.
 Initially, the 8-liter jug is completely filled; the others are empty.
