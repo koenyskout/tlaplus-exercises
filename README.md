@@ -9,9 +9,9 @@ The solutions contain many examples of using functions and records to maintain s
 > Only use the solutions when you get stuck, or to look at an alternative way of modeling compared to your own model.
 
 
-- [The river crossing puzzle](01-river-crossing)
-- [The water pouring puzzle](02-water-pouring)
-- [Two threads atomically increasing a counter](03-concurrent-counter-1)
-- [Two threads non-atomically increasing a counter](04-concurrent-counter-2)
-- [N threads non-atomically increasing a counter](05-concurrent-counter-3)
-- [Robots moving in a grid](06-robots)
+1. [The river crossing puzzle](01-river-crossing)
+2. [The water pouring puzzle](02-water-pouring)
+3. [Two threads atomically increasing a counter](03-concurrent-counter-1)
+4. [Two threads non-atomically increasing a counter](04-concurrent-counter-2)
+5. [N threads non-atomically increasing a counter](05-concurrent-counter-3)
+6. [Robots moving in a grid](06-robots)
