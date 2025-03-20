@@ -60,9 +60,9 @@ Release(robot, pos) == reservations' = [reservations EXCEPT ![robot] = @ \ {pos}
 ----
 
 (* Initial situation: 
-   - every robot is at some position (without overlap),
+   - every robot is in one of the initial states
+   - no two robots occupy the same square
    - every robot holds a reservation for its own position (and nothing else)
-   - every robot is idle and has a goal position
 *)
 Init == /\ robotState \in [Robots -> InitialRobotStates]
         /\ NoOverlap
@@ -75,7 +75,10 @@ Init == /\ robotState \in [Robots -> InitialRobotStates]
 PickNextPosition(robot, nextPos) == 
     /\ robotState[robot].status = "thinking"
     /\ IsAdjacent(CurrentPosition(robot), nextPos)
-    /\ robotState' = [robotState EXCEPT ![robot] = [@ EXCEPT !.next = nextPos, !.status = "waitForReservation"]]
+       \* The next line states that only the state of the current robot is updated,
+       \* and specifies the new values for the next and status attributes of the robot's state record
+    /\ robotState' = [robotState EXCEPT ![robot] = [@ EXCEPT !.next = nextPos,
+                                                             !.status = "waitForReservation"]]
     /\ UNCHANGED reservations
 
 (* Action: make a reservation for the next position.
@@ -94,8 +97,13 @@ MakeReservation(robot) == LET nextPos == NextPosition(robot) IN
    Successful execution puts the robot back into the 'thinking' status. *)
 MoveToNext(robot) ==
     /\ robotState[robot].status = "readyToMove"
-    /\ robotState' = [robotState EXCEPT ![robot] = [@ EXCEPT !.current = NextPosition(robot), !.next = UNDEFINED, !.status = "thinking"]]
-    /\ Release(robot, robotState[robot].current) \* release reservation of previous position after moving
+    /\ robotState' = [robotState EXCEPT ![robot] = [@ EXCEPT !.current = NextPosition(robot),
+                                                             !.next = UNDEFINED,
+                                                             !.status = "thinking"]]
+    /\ Release(robot, CurrentPosition(robot)) \* release reservation of previous position after moving
+       (* Note that CurrentPosition(robot) still refers to the old position, even though 
+          it may seem we have 'modified' the robotstate in the previous line.
+          Remember TLA+ formulas are just predicates on a (before, after) state pair, not a program. *)
 
 (* Combine the 3 possible actions into one Next operator *)
 Next == 
