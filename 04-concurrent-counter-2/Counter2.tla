@@ -41,7 +41,7 @@ Read2 == /\ thread2[1] = "started"
          /\ thread2' = <<"read", counter>>
          /\ UNCHANGED <<thread1, counter>>
 
-\* Action: Thread 1 updates the counter.
+\* Action: Thread 2 updates the counter.
 \* Can only happen if it's in the "read" state
 Inc2 == /\ thread2[1] = "read"
         /\ thread2' = <<"done", counter>>
