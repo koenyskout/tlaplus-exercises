@@ -23,7 +23,7 @@ vars == <<counter, threadState>>
 (* Initial state of counter and threads.
    We don't just keep the program counter for each thread,
    but also the value of the counter after reading it.
-   The state of each thread is be represented as a record with elements pc and val. *)
+   The state is a function mapping each thread to a record containing its pc (status) and val (value of the counter it has read). *)
 Init == /\ counter = 0
         /\ threadState = [t \in Threads |-> [pc |-> "started", val |-> UNDEFINED]]
 
@@ -36,7 +36,7 @@ Read(thread) == /\ threadState[thread].pc = "started"
 
 \* Action: A thread updates the counter.
 \* Can only happen if it's in the "read" state
-\* Updates the pc of the thread state, and modifies the counter based on it
+\* Updates the pc of the thread state, and modifies the counter based on the value it has read before
 Inc(thread) == /\ threadState[thread].pc = "read"
                /\ threadState' = [threadState EXCEPT ![thread] = [@ EXCEPT !.pc = "done"]]
                /\ counter' = threadState[thread].val + 1
@@ -57,8 +57,8 @@ Spec == Init /\ [][Next]_vars /\ Liveness
 ----
 \* Invariant: Types are as expected
 TypeOK == /\ counter \in Nat 
-          /\ \A thread \in Threads : threadState[thread].pc \in ThreadPC
-          /\ \A thread \in Threads : threadState[thread].val \in Nat \cup {UNDEFINED}
+             \* Note how we specify the set of all thread state records in the line below
+          /\ \A thread \in Threads : threadState[thread] \in [pc: ThreadPC, val: Nat \cup {UNDEFINED}]
 THEOREM Spec => []TypeOK
 
 \* Invariant: Counter between 0 and the number of threads 
